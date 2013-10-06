@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<script
+			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCJ69algA0WUj5fNRDhgrer_CnDt2jmOwQ&sensor=false">
+		</script>
+		<script>
+			var map;
+			function initialize()
+			{
+				var mapProp = {
+					center:new google.maps.LatLng(-35.999999,19.491299),
+					zoom:14,
+					mapTypeId:google.maps.MapTypeId.HYBRID
+				};
+				navigator.geolocation.getCurrentPosition(success);
+				map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+				window.setTimeout(function() {
+					map.panTo(new GLatLng(latte, longge));
+				}, 1000);
+
+			};
+
+
+			var infowindow =  new google.maps.InfoWindow({
+				content: 'Detetamos que esta aqui',
+				map: map
+			});
+
+
+			function success(position) {
+					var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				var output = document.getElementById("out");
+				var latte  = position.coords.latitude;
+				var longge = position.coords.longitude;
+				output.innerHTML = '<p>Latitude is ' + latte + '° <br>Longitude is ' + longge + '°</p>';
+				placeMarker(pos, map);
+			};
+
+			function placeMarker(pos, map) {
+				var marker = new google.maps.Marker({
+					position: pos,
+					map: map
+				});
+
+				map.panTo(pos);
+			}
+
+			google.maps.event.addDomListener(window, 'load', initialize);
+			google.maps.event.addListener(marker, "mouseover", function()
+				{infowindow.open(map, this);});
+
+		</script>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+
+		<title>  Simple Messaging System  </title>
+	</head>
+	<body>
+	<h1><center> Simple Messaging System [Prototype1]</center></h1>
+		{% for emailmessage in emailmessages %}
+			{% if emailmessage.author %}
+				<b>{{ emailmessage.author }}</b> escreveu:
+			{% else %}
+				Alguem escreveu:
+			{% endif %}
+			<blockquote>{{ emailmessage.content|escape }}</blockquote>
+		{% endfor %}
+
+	<form action="/mail" method="post">
+	<br></br>
+	<br></br>
+	<center>
+	  <div>Country code and Cell Number</div>
+	  <div><textarea name="recipient" rows="1" cols="60"></textarea></div>
+           <div>Message body:</div>
+	  <div><textarea name="content" rows="3" cols="60">Enter your message here</textarea></div>
+	  <div><input type="submit" value="SEND">
+	</form>
+	<div id="googleMap" style="width:400px;height:280px;"></div>
+	<div id = "out">ERROR: location disabled!</div>
+	<a href="{{ url }}">{{ url_linktext }}</a></center>
+
+
+  </body>
+</html>

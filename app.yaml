@@ -1,0 +1,22 @@
+application: wilsonsguestbook
+version: 2
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /.*
+  script: emailMessage.app
+  
+libraries:
+- name: webapp2
+  version: latest
+  
+- name: jinja2
+  version: latest
+
+inbound_services:
+- mail
